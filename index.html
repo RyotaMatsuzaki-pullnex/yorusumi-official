@@ -518,6 +518,32 @@
       z-index: 10;
       cursor: grab;
     }
+    .swiper-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 20;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FD3388, #A956FF);
+      color: #fff;
+      font-size: 22px;
+      line-height: 34px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(253,51,136,.35);
+      transition: opacity .2s;
+      user-select: none;
+    }
+    .swiper-btn.prop-prev,
+    .swiper-btn.rev-prev  { left: 6px; }
+    .swiper-btn.prop-next,
+    .swiper-btn.rev-next  { right: 6px; }
+    .swiper-btn.is-disabled {
+      opacity: 0;
+      pointer-events: none;
+    }
 
     .carousel-card {
       width: 300px;
@@ -1470,6 +1496,8 @@
         </div>
 
       </div>
+      <div class="swiper-btn prop-prev">&#8249;</div>
+      <div class="swiper-btn prop-next">&#8250;</div>
     </div>
 
     <div class="gallery-btn-wrap">
@@ -1646,6 +1674,8 @@
       </div>
 
     </div>
+      <div class="swiper-btn rev-prev">&#8249;</div>
+      <div class="swiper-btn rev-next">&#8250;</div>
     </div><!-- /reviews-swiper -->
   </section>
 
@@ -2012,9 +2042,9 @@
     resistanceRatio: 0.85,
     touchRatio: 1.5,
     grabCursor: true,
-    speed: 320,
-    threshold: 10,
-    longSwipesRatio: 0.3,
+    speed: 300,
+    threshold: 5,
+    longSwipesRatio: 0.2,
     touchStartPreventDefault: false,
     touchStartForcePreventDefault: true,
     slidesOffsetBefore: 20,
@@ -2025,19 +2055,39 @@
   var propSwiper = new Swiper('.property-swiper', {
     slidesPerView: 'auto',
     spaceBetween: 12,
-    speed: 320,
+    speed: 300,
     resistanceRatio: 0.85,
     allowTouchMove: true,
     touchStartPreventDefault: false,
     touchStartForcePreventDefault: true,
-    threshold: 10,
-    longSwipesRatio: 0.3,
+    threshold: 5,
+    longSwipesRatio: 0.2,
     touchRatio: 1.5,
     grabCursor: true,
     touchAngle: 45,
     slidesOffsetBefore: 20,
     slidesOffsetAfter: 20,
   });
+
+  /* ── 矢印ボタン制御 ── */
+  (function() {
+    function initNav(swiper, prevEl, nextEl) {
+      var prev = document.querySelector(prevEl);
+      var next = document.querySelector(nextEl);
+      function update() {
+        prev.classList.toggle('is-disabled', swiper.isBeginning);
+        next.classList.toggle('is-disabled', swiper.isEnd);
+      }
+      prev.addEventListener('click', function() { swiper.slidePrev(300); });
+      next.addEventListener('click', function() { swiper.slideNext(300); });
+      swiper.on('slideChange', update);
+      swiper.on('reachBeginning', update);
+      swiper.on('reachEnd', update);
+      update();
+    }
+    initNav(propSwiper, '.prop-prev', '.prop-next');
+    initNav(revSwiper,  '.rev-prev',  '.rev-next');
+  })();
 
   /* ── Scroll: hide/show sticky CTA near footer ── */
   const cta = document.querySelector('.sticky-cta');
