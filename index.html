@@ -493,10 +493,9 @@
       gap: 12px;
       overflow-x: auto;
       padding: 8px 20px 16px;
-      scroll-snap-type: x proximity;
+      scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
-      overscroll-behavior-x: contain;
     }
     .carousel::-webkit-scrollbar { display: none; }
     .iframe-overlay {
@@ -1111,10 +1110,9 @@
       gap: 14px;
       overflow-x: auto;
       padding: 8px 20px 16px;
-      scroll-snap-type: x proximity;
+      scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
-      overscroll-behavior-x: contain;
     }
     .reviews-carousel::-webkit-scrollbar { display: none; }
 
@@ -1988,20 +1986,49 @@
     });
   }
 
-  /* ── Carousel: iframe swipe fix ── */
+  /* ── Carousel: swipe handler ── */
   (function() {
-    document.querySelectorAll('.iframe-overlay').forEach(function(overlay) {
-      var carousel = overlay.closest('.carousel');
-      var startX = 0, startScrollLeft = 0;
-      overlay.addEventListener('touchstart', function(e) {
-        startX = e.touches[0].clientX;
-        startScrollLeft = carousel.scrollLeft;
+    // 物件カルーセル（iframeオーバーレイ経由）
+    var propCarousel = document.querySelector('.carousel');
+    if (propCarousel) {
+      var pStartX = 0, pStartScroll = 0;
+      var CARD_W = 312; // 300px card + 12px gap
+      document.querySelectorAll('.iframe-overlay').forEach(function(overlay) {
+        overlay.addEventListener('touchstart', function(e) {
+          pStartX = e.touches[0].clientX;
+          pStartScroll = propCarousel.scrollLeft;
+          propCarousel.style.scrollSnapType = 'none';
+        }, { passive: true });
+        overlay.addEventListener('touchmove', function(e) {
+          propCarousel.scrollLeft = pStartScroll + (pStartX - e.touches[0].clientX);
+        }, { passive: true });
+        overlay.addEventListener('touchend', function() {
+          propCarousel.style.scrollSnapType = '';
+          var nearest = Math.round(propCarousel.scrollLeft / CARD_W);
+          propCarousel.scrollTo({ left: nearest * CARD_W, behavior: 'smooth' });
+        }, { passive: true });
+      });
+    }
+
+    // お客様の声カルーセル（直接タッチ）
+    var revCarousel = document.querySelector('.reviews-carousel');
+    if (revCarousel) {
+      var rStartX = 0, rStartScroll = 0;
+      var REV_W = 254; // 240px card + 14px gap
+      revCarousel.addEventListener('touchstart', function(e) {
+        rStartX = e.touches[0].clientX;
+        rStartScroll = revCarousel.scrollLeft;
+        revCarousel.style.scrollSnapType = 'none';
       }, { passive: true });
-      overlay.addEventListener('touchmove', function(e) {
-        var dx = startX - e.touches[0].clientX;
-        carousel.scrollLeft = startScrollLeft + dx;
+      revCarousel.addEventListener('touchmove', function(e) {
+        revCarousel.scrollLeft = rStartScroll + (rStartX - e.touches[0].clientX);
       }, { passive: true });
-    });
+      revCarousel.addEventListener('touchend', function() {
+        revCarousel.style.scrollSnapType = '';
+        var nearest = Math.round(revCarousel.scrollLeft / REV_W);
+        revCarousel.scrollTo({ left: nearest * REV_W, behavior: 'smooth' });
+      }, { passive: true });
+    }
   })();
 
   /* ── Scroll: hide/show sticky CTA near footer ── */
