@@ -493,11 +493,19 @@
       gap: 12px;
       overflow-x: auto;
       padding: 8px 20px 16px;
-      scroll-snap-type: x mandatory;
+      scroll-snap-type: x proximity;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
+      overscroll-behavior-x: contain;
     }
     .carousel::-webkit-scrollbar { display: none; }
+    .iframe-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      bottom: 36px;
+      z-index: 2;
+      background: transparent;
+    }
 
     .carousel-card {
       flex-shrink: 0;
@@ -505,6 +513,7 @@
       scroll-snap-align: start;
       border-radius: 16px;
       overflow: hidden;
+      position: relative;
       background: #000;
       text-decoration: none;
       display: block;
@@ -1102,9 +1111,10 @@
       gap: 14px;
       overflow-x: auto;
       padding: 8px 20px 16px;
-      scroll-snap-type: x mandatory;
+      scroll-snap-type: x proximity;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
+      overscroll-behavior-x: contain;
     }
     .reviews-carousel::-webkit-scrollbar { display: none; }
 
@@ -1337,7 +1347,7 @@
           </svg>
         </div>
         <div>
-          <div class="feature-title">安心の審査率！</div>
+          <div class="feature-title">安心の審査通過率！</div>
           <div class="feature-desc">夜職の方でも通りやすい独自の審査基準◎ 他社で断られた方もお気軽にどうぞ。</div>
         </div>
       </div>
@@ -1398,6 +1408,7 @@
           <iframe src="https://www.tiktok.com/embed/v2/7517657178472385810"
             allowfullscreen scrolling="no" allow="encrypted-media;"
             style="width:100%; height:533px; border:none; display:block;"></iframe>
+          <div class="iframe-overlay"></div>
           <div class="carousel-card-footer">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="white" style="flex-shrink:0"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.82a8.18 8.18 0 004.78 1.52V6.89a4.85 4.85 0 01-1.01-.2z"/></svg>
             <a href="https://www.tiktok.com/@yorusumibukken/video/7517657178472385810" target="_blank" rel="noopener noreferrer" style="color:rgba(255,255,255,.75);font-size:10px;font-weight:500;text-decoration:none;">物件紹介 #1</a>
@@ -1410,6 +1421,7 @@
           <iframe src="https://www.tiktok.com/embed/v2/7514671614311681336"
             allowfullscreen scrolling="no" allow="encrypted-media;"
             style="width:100%; height:533px; border:none; display:block;"></iframe>
+          <div class="iframe-overlay"></div>
           <div class="carousel-card-footer">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="white" style="flex-shrink:0"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.82a8.18 8.18 0 004.78 1.52V6.89a4.85 4.85 0 01-1.01-.2z"/></svg>
             <a href="https://www.tiktok.com/@yorusumibukken/video/7514671614311681336" target="_blank" rel="noopener noreferrer" style="color:rgba(255,255,255,.75);font-size:10px;font-weight:500;text-decoration:none;">物件紹介 #2</a>
@@ -1422,6 +1434,7 @@
           <iframe src="https://www.tiktok.com/embed/v2/7518772830369107207"
             allowfullscreen scrolling="no" allow="encrypted-media;"
             style="width:100%; height:533px; border:none; display:block;"></iframe>
+          <div class="iframe-overlay"></div>
           <div class="carousel-card-footer">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="white" style="flex-shrink:0"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.82a8.18 8.18 0 004.78 1.52V6.89a4.85 4.85 0 01-1.01-.2z"/></svg>
             <a href="https://www.tiktok.com/@yorusumibukken/video/7518772830369107207" target="_blank" rel="noopener noreferrer" style="color:rgba(255,255,255,.75);font-size:10px;font-weight:500;text-decoration:none;">物件紹介 #3</a>
@@ -1434,6 +1447,7 @@
           <iframe src="https://www.tiktok.com/embed/v2/7535822628930505992"
             allowfullscreen scrolling="no" allow="encrypted-media;"
             style="width:100%; height:533px; border:none; display:block;"></iframe>
+          <div class="iframe-overlay"></div>
           <div class="carousel-card-footer">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="white" style="flex-shrink:0"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.82a8.18 8.18 0 004.78 1.52V6.89a4.85 4.85 0 01-1.01-.2z"/></svg>
             <a href="https://www.tiktok.com/@yorusumibukken/video/7535822628930505992" target="_blank" rel="noopener noreferrer" style="color:rgba(255,255,255,.75);font-size:10px;font-weight:500;text-decoration:none;">物件紹介 #4</a>
@@ -1973,6 +1987,22 @@
       }, 3500);
     });
   }
+
+  /* ── Carousel: iframe swipe fix ── */
+  (function() {
+    document.querySelectorAll('.iframe-overlay').forEach(function(overlay) {
+      var carousel = overlay.closest('.carousel');
+      var startX = 0, startScrollLeft = 0;
+      overlay.addEventListener('touchstart', function(e) {
+        startX = e.touches[0].clientX;
+        startScrollLeft = carousel.scrollLeft;
+      }, { passive: true });
+      overlay.addEventListener('touchmove', function(e) {
+        var dx = startX - e.touches[0].clientX;
+        carousel.scrollLeft = startScrollLeft + dx;
+      }, { passive: true });
+    });
+  })();
 
   /* ── Scroll: hide/show sticky CTA near footer ── */
   const cta = document.querySelector('.sticky-cta');
