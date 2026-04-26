@@ -496,6 +496,7 @@
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
+      scroll-padding-left: 20px;
     }
     .carousel::-webkit-scrollbar { display: none; }
     .iframe-overlay {
@@ -1113,6 +1114,8 @@
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
+      touch-action: pan-x;
+      scroll-padding-left: 20px;
     }
     .reviews-carousel::-webkit-scrollbar { display: none; }
 
@@ -1986,49 +1989,44 @@
     });
   }
 
-  /* ── Carousel: swipe handler ── */
+  /* ── Carousel: iframe swipe (velocity-based) ── */
   (function() {
-    // 物件カルーセル（iframeオーバーレイ経由）
     var propCarousel = document.querySelector('.carousel');
-    if (propCarousel) {
-      var pStartX = 0, pStartScroll = 0;
-      var CARD_W = 312; // 300px card + 12px gap
-      document.querySelectorAll('.iframe-overlay').forEach(function(overlay) {
-        overlay.addEventListener('touchstart', function(e) {
-          pStartX = e.touches[0].clientX;
-          pStartScroll = propCarousel.scrollLeft;
-          propCarousel.style.scrollSnapType = 'none';
-        }, { passive: true });
-        overlay.addEventListener('touchmove', function(e) {
-          propCarousel.scrollLeft = pStartScroll + (pStartX - e.touches[0].clientX);
-        }, { passive: true });
-        overlay.addEventListener('touchend', function() {
-          propCarousel.style.scrollSnapType = '';
-          var nearest = Math.round(propCarousel.scrollLeft / CARD_W);
-          propCarousel.scrollTo({ left: nearest * CARD_W, behavior: 'smooth' });
-        }, { passive: true });
-      });
-    }
+    if (!propCarousel) return;
+    var startX = 0, startScroll = 0, lastX = 0, lastT = 0, vel = 0;
 
-    // お客様の声カルーセル（直接タッチ）
-    var revCarousel = document.querySelector('.reviews-carousel');
-    if (revCarousel) {
-      var rStartX = 0, rStartScroll = 0;
-      var REV_W = 254; // 240px card + 14px gap
-      revCarousel.addEventListener('touchstart', function(e) {
-        rStartX = e.touches[0].clientX;
-        rStartScroll = revCarousel.scrollLeft;
-        revCarousel.style.scrollSnapType = 'none';
+    document.querySelectorAll('.iframe-overlay').forEach(function(overlay) {
+      overlay.addEventListener('touchstart', function(e) {
+        startX = lastX = e.touches[0].clientX;
+        startScroll = propCarousel.scrollLeft;
+        lastT = Date.now();
+        vel = 0;
+        propCarousel.style.scrollSnapType = 'none';
       }, { passive: true });
-      revCarousel.addEventListener('touchmove', function(e) {
-        revCarousel.scrollLeft = rStartScroll + (rStartX - e.touches[0].clientX);
+
+      overlay.addEventListener('touchmove', function(e) {
+        var x = e.touches[0].clientX;
+        var now = Date.now();
+        var dt = now - lastT;
+        if (dt > 0) vel = (lastX - x) / dt;
+        lastX = x;
+        lastT = now;
+        propCarousel.scrollLeft = startScroll + (startX - x);
       }, { passive: true });
-      revCarousel.addEventListener('touchend', function() {
-        revCarousel.style.scrollSnapType = '';
-        var nearest = Math.round(revCarousel.scrollLeft / REV_W);
-        revCarousel.scrollTo({ left: nearest * REV_W, behavior: 'smooth' });
+
+      overlay.addEventListener('touchend', function() {
+        // 速度に応じたフリック先カードをDOMから算出
+        var target = propCarousel.scrollLeft + vel * 180;
+        var cards = propCarousel.querySelectorAll('.carousel-card');
+        var best = cards[0], bestDist = Infinity;
+        cards.forEach(function(c) {
+          var d = Math.abs(c.offsetLeft - target);
+          if (d < bestDist) { bestDist = d; best = c; }
+        });
+        propCarousel.style.scrollSnapType = '';
+        propCarousel.scrollTo({ left: best.offsetLeft - 20, behavior: 'smooth' });
       }, { passive: true });
-    }
+    });
   })();
 
   /* ── Scroll: hide/show sticky CTA near footer ── */
