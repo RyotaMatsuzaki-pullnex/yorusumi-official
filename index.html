@@ -493,6 +493,7 @@
     .property-swiper {
       overflow: hidden;
       padding: 8px 0 16px;
+      touch-action: pan-y;
     }
     .carousel {
       padding: 0 !important;
@@ -1998,42 +1999,25 @@
     touchRatio: 1.2,
     grabCursor: true,
     speed: 320,
+    threshold: 5,
+    touchStartPreventDefault: false,
     slidesOffsetBefore: 20,
     slidesOffsetAfter: 20,
   });
 
-  /* ── Swiper: 物件カルーセル（overlay経由タッチ） ── */
+  /* ── Swiper: 物件カルーセル ── */
   var propSwiper = new Swiper('.property-swiper', {
     slidesPerView: 'auto',
     spaceBetween: 12,
     speed: 320,
     resistanceRatio: 0.85,
-    allowTouchMove: false,
+    allowTouchMove: true,
+    touchStartPreventDefault: false,
+    threshold: 5,
+    touchAngle: 45,
     slidesOffsetBefore: 20,
     slidesOffsetAfter: 20,
   });
-  (function() {
-    var startX = 0, startTranslate = 0;
-    document.querySelectorAll('.iframe-overlay').forEach(function(overlay) {
-      overlay.addEventListener('touchstart', function(e) {
-        startX = e.touches[0].clientX;
-        startTranslate = propSwiper.getTranslate();
-      }, { passive: true });
-      overlay.addEventListener('touchmove', function(e) {
-        var dx = e.touches[0].clientX - startX;
-        propSwiper.setTranslate(startTranslate + dx);
-      }, { passive: true });
-      overlay.addEventListener('touchend', function(e) {
-        var dx = e.changedTouches[0].clientX - startX;
-        if (dx < -40) propSwiper.slideNext(320);
-        else if (dx > 40) propSwiper.slidePrev(320);
-        else propSwiper.slideTo(propSwiper.activeIndex, 320);
-      }, { passive: true });
-      overlay.addEventListener('touchcancel', function() {
-        propSwiper.slideTo(propSwiper.activeIndex, 320);
-      }, { passive: true });
-    });
-  })();
 
   /* ── Scroll: hide/show sticky CTA near footer ── */
   const cta = document.querySelector('.sticky-cta');
